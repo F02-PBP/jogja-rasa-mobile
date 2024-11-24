@@ -89,21 +89,21 @@ Berikut ini adalah daftar modul yang akan kami implementasikan beserta pengemban
 _Dataset_ yang kami gunakan dapat diakses pada tautan [berikut ini](https://docs.google.com/spreadsheets/d/1EWzbPrJWy8ChZi6N0tm_GsCz2lU1QidzWzlQ8C3sphI/edit?usp=sharing). Data ini dikumpulkan secara manual dengan mengambil lokasi, deskripsi, serta nama restoran yang menjual makanan sesuai dengan nama restorannya.
 
 ## Alur Integrasi dengan JogjaRasa (Web App)
-## 1. Setup Backend Django
+### 1. Setup Backend Django
 - Membuat API autentikasi (login/register) dan operasi CRUD menggunakan Django REST Framework (DRF).
 - Membuat konfigurasi CORS menggunakan `django-cors-headers` agar Flutter dapat mengakses API.
 - Melakukan serializing model Django ke format JSON untuk kompatibilitas dengan struktur data Flutter.
 
-## 2. Setup Flutter
+### 2. Setup Flutter
 - Menginstall paket seperti `pbp_django_auth` dan `provider` untuk autentikasi dan state management.
 - Membuat model Dart berdasarkan struktur JSON yang dihasilkan API Django.
 - Merancang interface Flutter dengan gaya yang konsisten sesuai dengan aplikasi web JogjaRasa (dengan Django).
 
-## 3. Integrasi API
+### 3. Integrasi API
 - Mengimplementasikan request HTTP di Flutter untuk login, operasi CRUD, dan sinkronisasi data dengan backend Django.
 - Menggunakan session cookie atau token untuk autentikasi pengguna.
 - Memastikan komunikasi asynchronous dengan async-await agar UI tetap responsif.
 
-## 4. Keamanan dan Deployment
+### 4. Keamanan dan Deployment
 - Menerapkan CSRF protection, validasi input di Django dan Flutter, serta gunakan HTTPS untuk produksi.
 - Untuk deployment, deploy backend Django ke server atau cloud dengan dukungan HTTPS.
