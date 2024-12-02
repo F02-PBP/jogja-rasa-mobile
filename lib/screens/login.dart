@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:jogjarasa_mobile/screens/register.dart';
+import 'dart:convert';
 
 void main() {
   runApp(const LoginApp());
@@ -187,10 +188,10 @@ class _LoginPageState extends State<LoginPage> {
                             try {
                               final response = await request.postJson(
                                 "http://localhost:8000/auth/login/",
-                                {
+                                jsonEncode({
                                   'username': _usernameController.text,
                                   'password': _passwordController.text,
-                                },
+                                }),
                               );
 
                               if (response['status'] == true) {
