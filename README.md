@@ -107,3 +107,6 @@ _Dataset_ yang kami gunakan dapat diakses pada tautan [berikut ini](https://docs
 ### 4. Keamanan dan Deployment
 - Menerapkan CSRF protection, validasi input di Django dan Flutter, serta gunakan HTTPS untuk produksi.
 - Untuk deployment, deploy backend Django ke server atau cloud dengan dukungan HTTPS.
+
+## Progres Kelompok
+Tautan _tracker_ progres kelompok F02 dapat dilihat [di sini](https://docs.google.com/spreadsheets/d/19lP3U7wjGolJ56S3nAhz7-gh7xXMLLYy0JpX3oIXmyI/edit?usp=sharing)
