@@ -17,9 +17,10 @@ class LoginApp extends StatelessWidget {
       title: 'Login',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.deepPurple,
-        ).copyWith(secondary: Colors.deepPurple[400]),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.orange,
+          primary: Colors.orange[800]!,
+        ),
       ),
       home: const LoginPage(),
     );
@@ -37,149 +38,254 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
 
     return Scaffold(
+      backgroundColor: Colors.orange[50],
       appBar: AppBar(
-        title: const Text('Login'),
+        backgroundColor: Colors.orange[800],
+        title: const Text(
+          'Login',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        elevation: 0,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            elevation: 8,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.orange[50]!,
+              Colors.orange[100]!,
+            ],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Card(
+              elevation: 12,
+              shadowColor: Colors.orange.withOpacity(0.2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.white, Colors.orange[50]!],
+                  ),
+                ),
+                padding: const EdgeInsets.all(24.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.restaurant_menu,
+                        size: 64,
+                        color: Colors.orange[800],
                       ),
-                    ),
-                    const SizedBox(height: 30.0),
-                    TextFormField(
-                      controller: _usernameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Username',
-                        hintText: 'Masukkan username Anda',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Selamat Datang Kembali!',
+                        style: TextStyle(
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.brown,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 8.0),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Mohon masukkan username Anda';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12.0),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Masukkan password Anda',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Login untuk mengakses menu dan fitur menarik lainnya',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.brown[400],
                         ),
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 8.0),
                       ),
-                      obscureText: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Mohon masukkan password Anda';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 24.0),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          final response = await request
-                              .postJson("http://localhost:8000/auth/login/", {
-                            'username': _usernameController.text,
-                            'password': _passwordController.text,
-                          });
-
-                          if (response['status'] == true) {
-                            if (context.mounted) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyHomePage()),
+                      const SizedBox(height: 32.0),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.orange[200]!),
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                            labelText: 'Username',
+                            hintText: 'Masukkan username Anda',
+                            prefixIcon: Icon(Icons.person_outline,
+                                color: Colors.orange[800]),
+                            border: InputBorder.none,
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Mohon masukkan username Anda';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.orange[200]!),
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: _passwordController,
+                          obscureText: !_isPasswordVisible,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            hintText: 'Masukkan password Anda',
+                            prefixIcon: Icon(Icons.lock_outline,
+                                color: Colors.orange[800]),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isPasswordVisible
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.orange[800],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                            ),
+                            border: InputBorder.none,
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Mohon masukkan password Anda';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 24.0),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            try {
+                              final response = await request.postJson(
+                                "http://localhost:8000/auth/login/",
+                                {
+                                  'username': _usernameController.text,
+                                  'password': _passwordController.text,
+                                },
                               );
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(
-                                  SnackBar(
+
+                              if (response['status'] == true) {
+                                if (context.mounted) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MyHomePage()),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                    ..hideCurrentSnackBar()
+                                    ..showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "${response['message']} Selamat datang, ${response['user']['username']}!",
+                                        ),
+                                        backgroundColor: Colors.green,
+                                        behavior: SnackBarBehavior.floating,
+                                      ),
+                                    );
+                                }
+                              } else {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(response['message']),
+                                      backgroundColor: Colors.red,
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                }
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
                                     content: Text(
-                                        "${response['message']} Selamat datang, ${response['user']['username']}!"),
+                                        "Terjadi kesalahan. Silakan coba lagi."),
+                                    backgroundColor: Colors.red,
+                                    behavior: SnackBarBehavior.floating,
                                   ),
                                 );
-                            }
-                          } else {
-                            if (context.mounted) {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('Login Failed'),
-                                  content: Text(response['message']),
-                                  actions: [
-                                    TextButton(
-                                      child: const Text('OK'),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              );
+                              }
                             }
                           }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        minimumSize: Size(double.infinity, 50),
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      ),
-                      child: const Text('Login'),
-                    ),
-                    const SizedBox(height: 36.0),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RegisterPage()),
-                        );
-                      },
-                      child: Text(
-                        'Tidak punya akun? Daftar sekarang',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 16.0,
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.orange[800],
+                          minimumSize: const Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 3,
+                        ),
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 24.0),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RegisterPage()),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Tidak punya akun? ',
+                              style: TextStyle(
+                                color: Colors.brown[600],
+                                fontSize: 16.0,
+                              ),
+                            ),
+                            Text(
+                              'Daftar sekarang',
+                              style: TextStyle(
+                                color: Colors.orange[800],
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
