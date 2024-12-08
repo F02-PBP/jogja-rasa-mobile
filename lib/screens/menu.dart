@@ -71,11 +71,15 @@ class _MyHomePageState extends State<MyHomePage> {
       final result = await _restaurantService.getRecommendations(request);
 
       setState(() {
-        _recommendations = result['recommendations'] as List<Restaurant>;
+        _recommendations = (result['recommendations'] as List<Restaurant>);
         _interestedFood = result['interested_food'] as String;
       });
     } catch (e) {
       print('Failed to load recommendations: $e');
+      setState(() {
+        _recommendations = [];
+        _interestedFood = '';
+      });
     }
   }
 
@@ -143,217 +147,339 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          if (_recommendations.isNotEmpty) ...[
-            Container(
-              padding: const EdgeInsets.all(16),
-              color: Colors.orange[800],
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Rekomendasi untuk Anda',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+      body: RefreshIndicator(
+        onRefresh: _loadInitialData,
+        color: Colors.orange[800],
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverToBoxAdapter(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.orange[800],
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(20),
                   ),
-                  Text(
-                    'Berdasarkan preferensi: $_interestedFood',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 200,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _recommendations.length,
-                      itemBuilder: (context, index) {
-                        final restaurant = _recommendations[index];
-                        return Card(
-                          margin: const EdgeInsets.only(right: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Container(
-                            width: 280,
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  restaurant.name,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  restaurant.location,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  restaurant.description,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 14,
-                                  ),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          // Search Bar
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 5),
                                 ),
                               ],
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.orange[800],
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(20),
-              ),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    onChanged: (value) {
-                      setState(() {
-                        _searchQuery = value.toLowerCase();
-                      });
-                      _loadRestaurants();
-                    },
-                    decoration: const InputDecoration(
-                      hintText: 'Cari restoran...',
-                      border: InputBorder.none,
-                      icon: Icon(Icons.search),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedLocation ?? "Semua Lokasi",
-                      isExpanded: true,
-                      hint: const Text("Pilih Lokasi"),
-                      items: _locations.map((String location) {
-                        return DropdownMenuItem(
-                          value: location,
-                          child: Text(location),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedLocation = newValue;
-                        });
-                        _loadRestaurants();
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedFoodType ?? "Semua Jenis",
-                      isExpanded: true,
-                      hint: const Text("Jenis Makanan"),
-                      items: _foodTypes.map((String type) {
-                        return DropdownMenuItem(
-                          value: type,
-                          child: Text(type),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedFoodType = newValue;
-                        });
-                        _loadRestaurants();
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: _isLoading
-                ? Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.orange[800],
-                    ),
-                  )
-                : _error != null
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Error: $_error'),
-                            ElevatedButton(
-                              onPressed: _loadRestaurants,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange[800],
+                            child: TextField(
+                              controller: _searchController,
+                              onChanged: (value) {
+                                setState(() {
+                                  _searchQuery = value.toLowerCase();
+                                });
+                                _loadRestaurants();
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Cari restoran...',
+                                hintStyle: GoogleFonts.poppins(
+                                  color: Colors.grey[500],
+                                ),
+                                border: InputBorder.none,
+                                icon: Icon(Icons.search,
+                                    color: Colors.orange[800]),
                               ),
-                              child: const Text('Coba Lagi'),
                             ),
-                          ],
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: _selectedLocation ?? "Semua Lokasi",
+                                isExpanded: true,
+                                hint: Text(
+                                  "Pilih Lokasi",
+                                  style: GoogleFonts.poppins(),
+                                ),
+                                items: _locations.map((String location) {
+                                  return DropdownMenuItem(
+                                    value: location,
+                                    child: Text(
+                                      location,
+                                      style: GoogleFonts.poppins(),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    _selectedLocation = newValue;
+                                  });
+                                  _loadRestaurants();
+                                },
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: _selectedFoodType ?? "Semua Jenis",
+                                isExpanded: true,
+                                hint: Text(
+                                  "Jenis Makanan",
+                                  style: GoogleFonts.poppins(),
+                                ),
+                                items: _foodTypes.map((String type) {
+                                  return DropdownMenuItem(
+                                    value: type,
+                                    child: Text(
+                                      type,
+                                      style: GoogleFonts.poppins(),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    _selectedFoodType = newValue;
+                                  });
+                                  _loadRestaurants();
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if (_recommendations.isNotEmpty)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.recommend,
+                            color: Colors.orange[800],
+                            size: 24,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Rekomendasi untuk Anda',
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange[800],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Berdasarkan preferensi: $_interestedFood',
+                        style: GoogleFonts.poppins(
+                          color: Colors.grey[600],
+                          fontSize: 14,
                         ),
-                      )
-                    : RefreshIndicator(
-                        onRefresh: _loadRestaurants,
-                        color: Colors.orange[800],
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: 250,
                         child: ListView.builder(
-                          controller: _scrollController,
-                          padding: const EdgeInsets.all(16),
-                          itemCount: _getFilteredRestaurants().length,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _recommendations.length,
                           itemBuilder: (context, index) {
-                            return buildRestaurantCard(
-                                _getFilteredRestaurants()[index]);
+                            final restaurant = _recommendations[index];
+                            return Card(
+                              margin: const EdgeInsets.only(right: 16),
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: SizedBox(
+                                width: 280,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(12),
+                                      ),
+                                      child: Image.network(
+                                        'https://via.placeholder.com/400x120',
+                                        height: 120,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Container(
+                                            height: 120,
+                                            color: Colors.grey[300],
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.restaurant,
+                                                color: Colors.grey[400],
+                                                size: 40,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              restaurant.name,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.location_on,
+                                                  color: Colors.orange[800],
+                                                  size: 14,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Expanded(
+                                                  child: Text(
+                                                    restaurant.location,
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: 12,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Expanded(
+                                              child: Text(
+                                                restaurant.description,
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  color: Colors.grey[600],
+                                                ),
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ),
-          ),
-        ],
+                      const Divider(height: 32),
+                    ],
+                  ),
+                ),
+              ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.restaurant_menu,
+                      color: Colors.orange[800],
+                      size: 24,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Semua Restoran',
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange[800],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            _isLoading
+                ? const SliverFillRemaining(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.orange,
+                      ),
+                    ),
+                  )
+                : _error != null
+                    ? SliverFillRemaining(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Error: $_error'),
+                              ElevatedButton(
+                                onPressed: _loadRestaurants,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange[800],
+                                ),
+                                child: const Text('Coba Lagi'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : SliverPadding(
+                        padding: const EdgeInsets.all(16.0),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              return buildRestaurantCard(
+                                  _getFilteredRestaurants()[index]);
+                            },
+                            childCount: _getFilteredRestaurants().length,
+                          ),
+                        ),
+                      ),
+          ],
+        ),
       ),
     );
   }
@@ -374,9 +500,23 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.grey[300],
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(16)),
-              image: const DecorationImage(
-                image: NetworkImage('https://via.placeholder.com/400x200'),
+            ),
+            child: ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16)),
+              child: Image.network(
+                'https://via.placeholder.com/400x200',
+                width: double.infinity,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Center(
+                    child: Icon(
+                      Icons.restaurant,
+                      size: 64,
+                      color: Colors.grey[400],
+                    ),
+                  );
+                },
               ),
             ),
           ),
