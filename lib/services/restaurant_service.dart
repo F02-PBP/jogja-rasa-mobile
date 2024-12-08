@@ -77,20 +77,13 @@ class RestaurantService {
       final response = await request.get('$baseUrl/get_recommendations/');
 
       if (response['recommendations'] != null) {
-        final List<dynamic> recommendationData = response['recommendations'];
+        final List<dynamic> recommendationData =
+            response['recommendations'] as List;
         final String interestedFood = response['interested_food'] ?? '';
 
-        final List<Restaurant> recommendations = recommendationData
-            .map((json) => Restaurant(
-                  id: json['id'].toString(),
-                  name: json['name'],
-                  description: json['description'],
-                  longitude: json['longitude'].toDouble(),
-                  latitude: json['latitude'].toDouble(),
-                  location: json['location'],
-                  isBookmarked: false,
-                ))
-            .toList();
+        final List<Restaurant> recommendations = recommendationData.map((json) {
+          return Restaurant.fromJson(json as Map<String, dynamic>);
+        }).toList();
 
         return {
           'recommendations': recommendations,
@@ -102,7 +95,11 @@ class RestaurantService {
         'interested_food': '',
       };
     } catch (e) {
-      throw Exception('Failed to fetch recommendations: $e');
+      print('Recommendation error: $e');
+      return {
+        'recommendations': <Restaurant>[],
+        'interested_food': '',
+      };
     }
   }
 }
