@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
 import 'package:jogjarasa_mobile/services/restaurant_service.dart';
+import 'package:jogjarasa_mobile/widgets/left_drawer.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -73,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: LeftDrawer(),
       backgroundColor: Colors.orange[50],
       appBar: AppBar(
         backgroundColor: Colors.orange[800],
