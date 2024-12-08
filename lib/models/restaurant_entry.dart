@@ -29,6 +29,8 @@ class Restaurant {
       location: json['location'] ??
           getLocationFromCoordinates(
               json['longitude'].toDouble(), json['latitude'].toDouble()),
+      isBookmarked: json['is_bookmarked'] ?? false,
+      rating: json['rating']?.toDouble() ?? 0.0,
     );
   }
 
