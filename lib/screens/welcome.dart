@@ -11,8 +11,7 @@ class WelcomePage extends StatefulWidget {
   State<WelcomePage> createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends State<WelcomePage>
-    with SingleTickerProviderStateMixin {
+class _WelcomePageState extends State<WelcomePage> with SingleTickerProviderStateMixin {
   final PageController pageController = PageController();
   int activeIndex = 0;
   late AnimationController _animationController;

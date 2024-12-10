@@ -5,8 +5,8 @@ import 'package:jogjarasa_mobile/screens/welcome.dart';
 import 'package:jogjarasa_mobile/screens/login.dart';
 import 'package:jogjarasa_mobile/screens/register.dart';
 import 'package:jogjarasa_mobile/screens/menu.dart';
+import 'package:jogjarasa_mobile/screens/rating.dart';
 // import 'package:jogjarasa_mobile/screens/forum.dart';
-// import 'package:jogjarasa_mobile/screens/rating.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,8 +50,8 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/home': (context) => const MyHomePage(),
+          '/rating': (context) => const RatingPage(),
           // '/forum': (context) => const ForumPage(),
-          // '/rating': (context) => const RatingPage(),
         },
         debugShowCheckedModeBanner: false,
       ),
