@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
+
 
 List<Reservation> reservationFromJson(String str) => List<Reservation>.from(json.decode(str).map((x) => Reservation.fromJson(x)));
 
@@ -57,37 +59,5 @@ class Fields {
         "time": time,
         "number_of_people": numberOfPeople,
         "restaurant": restaurant.toJson(),
-    };
-}
-
-class Restaurant {
-    String id;
-    String name;
-    double longitude;
-    double latitude;
-    String description;
-
-    Restaurant({
-        required this.id,
-        required this.name,
-        required this.longitude,
-        required this.latitude,
-        required this.description,
-    });
-
-    factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
-        id: json["id"],
-        name: json["name"],
-        longitude: json["longitude"]?.toDouble(),
-        latitude: json["latitude"]?.toDouble(),
-        description: json["description"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "longitude": longitude,
-        "latitude": latitude,
-        "description": description,
     };
 }

@@ -19,6 +19,14 @@ class Restaurant {
     required this.location,
   });
 
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "longitude": longitude,
+        "latitude": latitude,
+        "description": description,
+    };
+
   factory Restaurant.fromJson(Map<String, dynamic> json) {
     return Restaurant(
       id: json['id'],
