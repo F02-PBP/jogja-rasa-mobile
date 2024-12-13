@@ -139,7 +139,7 @@ class _RatingPageState extends State<RatingPage> {
                                       '$totalReviews',
                                       style: const TextStyle(
                                         fontSize: 24,
-                                        color: Colors.blue,
+                                        color: Colors.amber,
                                       ),
                                     ),
                                   ],

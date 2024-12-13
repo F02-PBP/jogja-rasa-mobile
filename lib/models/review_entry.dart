@@ -1,3 +1,4 @@
+import 'dart:convert';
 class Review {
   final String idreview;
   final String idrestaurant;
@@ -5,6 +6,14 @@ class Review {
   final DateTime date;
   final int rating;
   final String review;
+  // method return List<Review> from json
+  List<Review> reviewFromJson(String str) 
+    => List<Review>.from(json.decode(str).map((x)
+    =>  Review.fromJson(x)));
+  // method return List<Review> to json
+  String reviewToJson(List<Review> data) 
+    => json.encode(List<dynamic>.from(data.map((x) 
+    => x.toJson())));
 
   Review({
     required this.iduser,

@@ -13,7 +13,7 @@ class ReviewServices {
 
       if (response.statusCode == 200) {
         final List<dynamic> reviewJson = json.decode(response.body);
-        return reviewJson.map((json) => Review.fromJson(json)).toList();
+        return reviewJson.map<Review>( (dynamic json) => Review.fromJson(json)).toList();
       }
       else {
         throw Exception(
