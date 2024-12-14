@@ -74,6 +74,19 @@ class LeftDrawer extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, '/rating');
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.bookmarks),
+              title: Text(
+                'Bookmark',
+                style: GoogleFonts.poppins(),
+              ),
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context, '/bookmark',
+                  (route) => route.isFirst,
+                );
+              },
+            ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.logout, color: Colors.red),

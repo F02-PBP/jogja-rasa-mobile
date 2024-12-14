@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jogjarasa_mobile/models/bookmark_entry.dart';
 import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
 import 'package:jogjarasa_mobile/services/restaurant_service.dart';
 import 'package:jogjarasa_mobile/widgets/left_drawer.dart';
@@ -91,28 +92,36 @@ class _MyHomePageState extends State<MyHomePage> {
       });
 
       final request = context.read<CookieRequest>();
+
+      List<Restaurant> restaurants = [];
+      List<Bookmark> bookmarks = [];
+
       if (_searchQuery.isNotEmpty ||
           _selectedLocation != null ||
           (_selectedFoodType != null && _selectedFoodType != "Semua Jenis")) {
-        final restaurants = await _restaurantService.searchRestaurants(
+        restaurants = await _restaurantService.searchRestaurants(
           request: request,
           query: _searchQuery,
           region: _selectedLocation,
           foodType:
               _selectedFoodType == "Semua Jenis" ? null : _selectedFoodType,
         );
-
-        setState(() {
-          _restaurants = restaurants;
-          _isLoading = false;
-        });
       } else {
-        final restaurants = await _restaurantService.getRestaurants();
-        setState(() {
-          _restaurants = restaurants;
-          _isLoading = false;
-        });
+        restaurants = await _restaurantService.getRestaurants(request);
       }
+      bookmarks = await _restaurantService.getBookmarks(request);
+
+      final bookmarkedIds = bookmarks.map((b) => b.id).toSet();
+
+      for (var restaurant in restaurants) {
+        restaurant.isBookmarked = bookmarkedIds.contains(restaurant.id);
+      }
+
+      setState(() {
+        _restaurants = restaurants;
+        _isLoading = false;
+      });
+
     } catch (e) {
       setState(() {
         _error = e.toString();
@@ -593,25 +602,41 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          restaurant.isBookmarked = !restaurant.isBookmarked;
-                        });
-                      },
-                      icon: Icon(
-                        restaurant.isBookmarked
-                            ? Icons.bookmark
-                            : Icons.bookmark_border,
-                        color: Colors.orange[800],
-                      ),
-                    ),
                     TextButton.icon(
                       onPressed: () {},
                       icon: const Icon(Icons.star_border),
                       label: const Text('Nilai'),
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.orange[800],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        try {
+                          final request = context.read<CookieRequest>();
+
+                          print('Before toggle: ${restaurant.isBookmarked}');
+
+                          final isBookmarked = await _restaurantService
+                              .toggleBookmark(request, restaurant.id);
+
+                          print('Toggle response: $isBookmarked');
+
+                          setState(() {
+                            restaurant.isBookmarked = isBookmarked;
+                            print('After toggle: ${restaurant.isBookmarked}');
+                          });
+                        } catch (e) {
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('Error toggling bookmark: $e')));
+                        }
+                      },
+                      icon: Icon(
+                        restaurant.isBookmarked
+                            ? Icons.bookmark
+                            : Icons.bookmark_border,
+                        color: Colors.orange[800],
                       ),
                     ),
                   ],

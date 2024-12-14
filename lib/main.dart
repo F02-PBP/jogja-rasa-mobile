@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:jogjarasa_mobile/screens/bookmark/bookmark.dart';
 import 'package:jogjarasa_mobile/screens/welcome.dart';
 import 'package:jogjarasa_mobile/screens/login.dart';
 import 'package:jogjarasa_mobile/screens/register.dart';
@@ -52,7 +53,8 @@ class MyApp extends StatelessWidget {
           '/home': (context) => const MyHomePage(),
           // '/forum': (context) => const ForumPage(),
           // '/rating': (context) => const RatingPage(),
-        },
+          '/bookmark': (context) => const BookmarkPage(),
+          },
         debugShowCheckedModeBanner: false,
       ),
     );
