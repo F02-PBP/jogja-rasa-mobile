@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:jogjarasa_mobile/models/bookmark_entry.dart';
 import 'dart:convert';
 import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -7,10 +8,11 @@ class RestaurantService {
   static const String baseUrl = 'http://localhost:8000';
   static const int itemsPerPage = 10;
 
-  Future<List<Restaurant>> getRestaurants() async {
+  Future<List<Restaurant>> getRestaurants(CookieRequest request) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/restaurant/get_restaurants/'));
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         final List<dynamic> restaurantsJson = data['restaurants'];
@@ -100,6 +102,44 @@ class RestaurantService {
         'recommendations': <Restaurant>[],
         'interested_food': '',
       };
+    }
+  }
+
+  Future<bool> toggleBookmark(
+      CookieRequest request, String restaurant_id) async {
+    final url = "$baseUrl/bookmark/toggle_bookmark_flutter/$restaurant_id/";
+    final response = await request.post(url, restaurant_id);
+    if (response['success']) {
+      return response['is_bookmarked'];
+    }
+    throw Exception(response['error']);
+  }
+
+  Future<List<Bookmark>> getBookmarks(CookieRequest request) async {
+    final url = "$baseUrl/bookmark/get_bookmarks_flutter/";
+    final response = await request.get(url);
+
+    print("Response: $response");
+
+    if (response == null || response.isEmpty) {
+      throw Exception('No data received');
+    }
+    Map<String, dynamic> data = response;
+    print("Parsed data: $data");
+
+    if (data['success']) {
+      final List<dynamic> bookmarksData = data['bookmarks'];
+
+      return bookmarksData.map((json) {
+        try {
+          return Bookmark.fromJson(json ?? {});
+        } catch (e) {
+          print("Error while parsing bookmark: $e");
+          rethrow;
+        }
+      }).toList();
+    } else {
+      throw Exception('Failed to fetch bookmarks');
     }
   }
 }

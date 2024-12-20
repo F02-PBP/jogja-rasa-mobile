@@ -76,6 +76,20 @@ class LeftDrawer extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.bookmarks),
+              title: Text(
+                'Bookmark',
+                style: GoogleFonts.poppins(),
+              ),
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context, '/bookmark',
+                  (route) => route.isFirst,
+                );
+              },
+            ),
+            
+            ListTile(
               leading: const Icon(Icons.calendar_today),
               title: Text(
                 'Reservasi',
