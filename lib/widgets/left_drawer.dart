@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jogjarasa_mobile/screens/reservation/reservation_list.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -84,6 +85,21 @@ class LeftDrawer extends StatelessWidget {
                 Navigator.pushNamedAndRemoveUntil(
                   context, '/bookmark',
                   (route) => route.isFirst,
+                );
+              },
+            ),
+            
+            ListTile(
+              leading: const Icon(Icons.calendar_today),
+              title: Text(
+                'Reservasi',
+                style: GoogleFonts.poppins(),
+              ),
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ReservationPage()),
+                  (route) => false,
                 );
               },
             ),
