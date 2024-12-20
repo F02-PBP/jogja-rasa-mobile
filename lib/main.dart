@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jogjarasa_mobile/screens/reservation/reservation_list.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:jogjarasa_mobile/screens/welcome.dart';
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.orange,
           ).copyWith(
             secondary: Colors.orange[400],
-            background: Colors.orange[50],
+            surface: Colors.orange[50],
           ),
           appBarTheme: AppBarTheme(
             backgroundColor: Colors.orange[800],
@@ -50,8 +51,10 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/home': (context) => const MyHomePage(),
+          '/reservasi': (context) => const ReservationPage(),
           // '/forum': (context) => const ForumPage(),
           // '/rating': (context) => const RatingPage(),
+          
         },
         debugShowCheckedModeBanner: false,
       ),
