@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
+import 'package:jogjarasa_mobile/screens/reservation/reservation_form.dart';
 import 'package:jogjarasa_mobile/services/restaurant_service.dart';
 import 'package:jogjarasa_mobile/widgets/left_drawer.dart';
 import 'package:provider/provider.dart';
@@ -582,7 +583,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Navigate to the ReservationFormPage
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReservationFormPage(
+                              restaurantModel: restaurant,
+                            ),
+                          ),
+                        );
+                      },
                       icon: const Icon(Icons.calendar_today, size: 18),
                       label: const Text('Reservasi'),
                       style: ElevatedButton.styleFrom(
