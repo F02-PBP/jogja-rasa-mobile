@@ -3,9 +3,9 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:jogjarasa_mobile/models/review_entry.dart';
 import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
-import 'package:jogjarasa_mobile/services/review_services.dart' as service;
+import 'package:jogjarasa_mobile/services/review_services.dart' as review_service;
 import 'package:jogjarasa_mobile/services/restaurant_service.dart' as restaurant_service;
-
+import 'package:jogjarasa_mobile/screens/rating_more.dart';
 class RatingPage extends StatefulWidget {
   const RatingPage({super.key});
 
@@ -14,36 +14,23 @@ class RatingPage extends StatefulWidget {
 }
 
 class _RatingPageState extends State<RatingPage> {
-  void _navigateToRestaurantDetails(BuildContext context, Restaurant restaurant) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(restaurant.name),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Location: ${restaurant.location}'),
-              Text('Description: ${restaurant.description}'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
+  void _navigateToRestaurantDetails(BuildContext context, Restaurant restaurant, List<Review>? reviews) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RestaurantReviewPage(
+          restaurant: restaurant,
+          reviews: reviews,
+        ),
+      ),
     );
-  }
+}
 
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
 
-    service.ReviewServices servant = service.ReviewServices();
+    review_service.ReviewServices servant = review_service.ReviewServices();
     restaurant_service.RestaurantService restaurantServant = restaurant_service.RestaurantService();
 
     return Scaffold(
@@ -110,7 +97,7 @@ class _RatingPageState extends State<RatingPage> {
                             ),
                           ),
                           ElevatedButton(
-                            onPressed: () => _navigateToRestaurantDetails(context, restaurant),
+                            onPressed: () => _navigateToRestaurantDetails(context, restaurant, groupedReviews[restaurant.id]),
                             child: const Text('More Info'),
                           ),
                         ],
