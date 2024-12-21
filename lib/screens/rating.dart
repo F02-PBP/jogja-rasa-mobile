@@ -40,7 +40,7 @@ class _RatingPageState extends State<RatingPage> {
       body: FutureBuilder(
         future: Future.wait([
           servant.getReviews(request: request),
-          restaurantServant.getRestaurants(),
+          restaurantServant.getRestaurants(request),
         ]),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
