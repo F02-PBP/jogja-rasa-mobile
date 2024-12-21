@@ -5,8 +5,8 @@ import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
 import 'package:jogjarasa_mobile/screens/reservation/reservation_form.dart';
 import 'package:jogjarasa_mobile/services/restaurant_service.dart';
 import 'package:jogjarasa_mobile/widgets/left_drawer.dart';
-import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
