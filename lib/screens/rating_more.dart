@@ -24,6 +24,52 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
   final _reviewController = TextEditingController();
   int _rating = 5;
 
+  Set<int> _selectedRatings = {1, 2, 3, 4, 5};
+  DateTime? _startDate;
+  DateTime? _endDate;
+  String _searchUsername = '';
+
+  List<Review> _getFilteredReviews() {
+    
+    
+    return (widget.reviews ?? []).where((review) {
+      if (!_selectedRatings.contains(review.rating)) {
+        return false;
+      }
+      
+      if (_startDate != null && review.date.isBefore(_startDate!)) {
+        return false;
+      }
+      if (_endDate != null && review.date.isAfter(_endDate!)) {
+        return false;
+      }
+      
+      if (_searchUsername.isNotEmpty && 
+          !review.username.toLowerCase().contains(_searchUsername.toLowerCase())) {
+        return false;
+      }
+      return true;
+    }).toList();
+  }
+
+  Future<void> _selectDate(bool isStartDate) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isStartDate) {
+          _startDate = picked;
+        } else {
+          _endDate = picked;
+        }
+      });
+    }
+  }
+
   Map<int, int> _calculateRatingDistribution(List<Review> reviews) {
     Map<int, int> distribution = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0};
     for (var review in reviews) {
@@ -232,7 +278,118 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                 ),
               ),
               const SizedBox(height: 24),
-
+              Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Filter Reviews',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      // Rating filter
+                      const Text('Filter by Rating:'),
+                      Wrap(
+                        spacing: 8,
+                        children: [1, 2, 3, 4, 5].map((rating) {
+                          return FilterChip(
+                            label: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('$rating'),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.star,
+                                  size: 16,
+                                  color: _selectedRatings.contains(rating) 
+                                    ? Colors.amber 
+                                    : Colors.grey,
+                                ),
+                              ],
+                            ),
+                            selected: _selectedRatings.contains(rating),
+                            onSelected: (selected) {
+                              setState(() {
+                                if (selected) {
+                                  _selectedRatings.add(rating);
+                                } else if (_selectedRatings.length > 1) {
+                                  _selectedRatings.remove(rating);
+                                }
+                              });
+                            },
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      // Date filter
+                      const Text('Filter by Date Range:'),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextButton.icon(
+                              icon: const Icon(Icons.calendar_today),
+                              label: Text(_startDate == null 
+                                ? 'Start Date' 
+                                : 'From: ${_startDate!.toString().split(' ')[0]}'),
+                              onPressed: () => _selectDate(true),
+                            ),
+                          ),
+                          Expanded(
+                            child: TextButton.icon(
+                              icon: const Icon(Icons.calendar_today),
+                              label: Text(_endDate == null 
+                                ? 'End Date' 
+                                : 'To: ${_endDate!.toString().split(' ')[0]}'),
+                              onPressed: () => _selectDate(false),
+                            ),
+                          ),
+                        ],
+                      ),
+                      
+                      // Username filter
+                      const SizedBox(height: 16),
+                      TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'Search by Username',
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _searchUsername = value;
+                          });
+                        },
+                      ),
+                      
+                      // Clear filters button
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.clear_all),
+                          label: const Text('Clear All Filters'),
+                          onPressed: () {
+                            setState(() {
+                              _selectedRatings = {1, 2, 3, 4, 5};
+                              _startDate = null;
+                              _endDate = null;
+                              _searchUsername = '';
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               // Reviews List
               const Text(
                 'All Reviews',
@@ -245,9 +402,9 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: reviews.length,
+                itemCount: _getFilteredReviews().length,
                 itemBuilder: (context, index) {
-                  final review = reviews[index];
+                  final review = _getFilteredReviews()[index];;
                   // final String? _username = review.username;
                   return Card(
                     margin: const EdgeInsets.only(bottom: 8),
