@@ -25,6 +25,25 @@ class ReviewServices {
     }
   }
 
+  Future<List<Review>> getRestaurantReviews ({required CookieRequest request, required String id}) async {
+    try {
+        final response =
+          await http.get(Uri.parse('$baseUrl/review/show_restaurant_reviews_json_flutter/$id/'));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> reviewJson = json.decode(response.body);
+        return reviewJson.map<Review>( (dynamic json) => Review.fromJson(json)).toList();
+      }
+      else {
+        throw Exception(
+          'Failed to load review. Status ${response.statusCode}'
+        );
+      }
+    } catch (e) {
+      throw Exception('Cannot get review: $e');
+    }
+  }
+
   Future<Map<String, dynamic>> restaurantReview(List<Review> reviews) async{
     Map<String, List<Review>> groupedReviews = {};
     for (var review in reviews) {

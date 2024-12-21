@@ -2,14 +2,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:jogjarasa_mobile/services/review_services.dart' as review_services;
 import 'package:jogjarasa_mobile/models/review_entry.dart';
 import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
 
 class RestaurantReviewPage extends StatefulWidget {
   final Restaurant restaurant;
-  final List<Review>? reviews;
+  List<Review>? reviews; // Remove final to allow updates
 
-  const RestaurantReviewPage({
+  RestaurantReviewPage({
     super.key,
     required this.restaurant,
     this.reviews,
@@ -22,6 +23,8 @@ class RestaurantReviewPage extends StatefulWidget {
 class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
   final _formKey = GlobalKey<FormState>();
   final _reviewController = TextEditingController();
+
+  final reviewServant = review_services.ReviewServices();
   int _rating = 5;
 
   Set<int> _selectedRatings = {1, 2, 3, 4, 5};
@@ -242,6 +245,13 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                                 }));
                                 if (context.mounted) {
                                   if (response['status'] == true) {
+                                    final updatedReviews = await reviewServant.getRestaurantReviews(request: request, id: widget.restaurant.id);
+
+                                    setState(() {
+                                      widget.reviews = updatedReviews;
+                                      _reviewController.clear(); // Clear the input field
+                                    });
+
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         content: Text('Berhasil menambahkan review'),
@@ -404,7 +414,7 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _getFilteredReviews().length,
                 itemBuilder: (context, index) {
-                  final review = _getFilteredReviews()[index];;
+                  final review = _getFilteredReviews()[index];
                   // final String? _username = review.username;
                   return Card(
                     margin: const EdgeInsets.only(bottom: 8),
