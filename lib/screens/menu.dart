@@ -122,7 +122,6 @@ class _MyHomePageState extends State<MyHomePage> {
         _restaurants = restaurants;
         _isLoading = false;
       });
-
     } catch (e) {
       setState(() {
         _error = e.toString();
@@ -298,12 +297,15 @@ class _MyHomePageState extends State<MyHomePage> {
                             size: 24,
                           ),
                           const SizedBox(width: 8),
-                          Text(
-                            'Rekomendasi untuk Anda',
-                            style: GoogleFonts.poppins(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.orange[800],
+                          Expanded(
+                            child: Text(
+                              'Rekomendasi untuk Anda',
+                              style: GoogleFonts.poppins(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange[800],
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -318,108 +320,224 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       const SizedBox(height: 16),
                       SizedBox(
-                        height: 250,
-                        child: ListView.builder(
+                        height: 400,
+                        child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
-                          itemCount: _recommendations.length,
-                          itemBuilder: (context, index) {
-                            final restaurant = _recommendations[index];
-                            return Card(
-                              margin: const EdgeInsets.only(right: 16),
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: SizedBox(
-                                width: 280,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(12),
-                                      ),
-                                      child: Image.network(
-                                        'https://via.placeholder.com/400x120',
-                                        height: 120,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Container(
-                                            height: 120,
-                                            color: Colors.grey[300],
-                                            child: Center(
-                                              child: Icon(
-                                                Icons.restaurant,
-                                                color: Colors.grey[400],
-                                                size: 40,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              restaurant.name,
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on,
-                                                  color: Colors.orange[800],
-                                                  size: 14,
+                          child: Row(
+                            children: _recommendations.map((restaurant) {
+                              return Container(
+                                width: 300,
+                                margin: const EdgeInsets.only(right: 16),
+                                child: Card(
+                                  elevation: 4,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[300],
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                  top: Radius.circular(16)),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                  top: Radius.circular(16)),
+                                          child: Image.network(
+                                            'https://via.placeholder.com/400x150',
+                                            width: double.infinity,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Center(
+                                                child: Icon(
+                                                  Icons.restaurant,
+                                                  size: 64,
+                                                  color: Colors.grey[400],
                                                 ),
-                                                const SizedBox(width: 4),
-                                                Expanded(
-                                                  child: Text(
-                                                    restaurant.location,
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: 12,
-                                                      color: Colors.grey[600],
-                                                    ),
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Expanded(
-                                              child: Text(
-                                                restaurant.description,
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 12,
-                                                  color: Colors.grey[600],
-                                                ),
-                                                maxLines: 3,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      restaurant.name,
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      maxLines: 2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Icon(Icons.star,
+                                                          color:
+                                                              Colors.amber[600],
+                                                          size: 20),
+                                                      const SizedBox(width: 4),
+                                                      Text(
+                                                        restaurant.rating
+                                                            .toStringAsFixed(1),
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.location_on,
+                                                      color: Colors.orange[800],
+                                                      size: 16),
+                                                  const SizedBox(width: 4),
+                                                  Expanded(
+                                                    child: Text(
+                                                      restaurant.location,
+                                                      style: TextStyle(
+                                                        color: Colors.grey[600],
+                                                        fontSize: 14,
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                restaurant.description,
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 14,
+                                                ),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              const Spacer(),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  ElevatedButton.icon(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ReservationFormPage(
+                                                            restaurantModel:
+                                                                restaurant,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons.calendar_today,
+                                                        size: 18),
+                                                    label:
+                                                        const Text('Reservasi'),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.orange[800],
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextButton.icon(
+                                                    onPressed: () {},
+                                                    icon: const Icon(
+                                                        Icons.star_border),
+                                                    label: const Text('Nilai'),
+                                                    style: TextButton.styleFrom(
+                                                      foregroundColor:
+                                                          Colors.orange[800],
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () async {
+                                                      try {
+                                                        final request =
+                                                            context.read<
+                                                                CookieRequest>();
+                                                        final isBookmarked =
+                                                            await _restaurantService
+                                                                .toggleBookmark(
+                                                                    request,
+                                                                    restaurant
+                                                                        .id);
+                                                        setState(() {
+                                                          restaurant
+                                                                  .isBookmarked =
+                                                              isBookmarked;
+                                                        });
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(SnackBar(
+                                                                content: Text(
+                                                                    'Error toggling bookmark: $e')));
+                                                      }
+                                                    },
+                                                    icon: Icon(
+                                                      restaurant.isBookmarked
+                                                          ? Icons.bookmark
+                                                          : Icons
+                                                              .bookmark_border,
+                                                      color: Colors.orange[800],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                       const Divider(height: 32),
