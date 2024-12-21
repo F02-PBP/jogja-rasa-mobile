@@ -21,7 +21,6 @@ class _RatingPageState extends State<RatingPage> {
       MaterialPageRoute(
         builder: (context) => RestaurantReviewPage(
           restaurant: restaurant,
-          reviews: reviews,
         ),
       ),
     );

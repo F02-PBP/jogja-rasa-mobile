@@ -25,7 +25,7 @@ class ReviewServices {
     }
   }
 
-  Future<List<Review>> getRestaurantReviews ({required CookieRequest request, required String id}) async {
+  Future<List<Review>> getRestaurantReviews ({required String id}) async {
     try {
         final response =
           await http.get(Uri.parse('$baseUrl/review/show_restaurant_reviews_json_flutter/$id/'));
@@ -60,8 +60,8 @@ class ReviewServices {
     return groupedReviews.map((key, value) => MapEntry(key, value));
   }
 
-  double restaurantAverageRating(Map<String, List<Review>> groupedReviews, String idRestaurant)  {
-    List<Review>? restaurantReview = groupedReviews[idRestaurant];
+  double restaurantAverageRating(Map<String, List<Review>>? groupedReviews, String idRestaurant)  {
+    List<Review>? restaurantReview = groupedReviews?[idRestaurant];
     double avgRating = 0.0;
     int totalReview = 0;
     if (restaurantReview != null && restaurantReview.isNotEmpty) {
@@ -74,6 +74,21 @@ class ReviewServices {
 
     return avgRating;
   }
+
+Future<double> averageRating(String id) async{
+  List<Review>? restaurantReview = await getRestaurantReviews(id: id);
+  double avgRating = 0.0;
+    int totalReview = 0;
+    if (restaurantReview.isNotEmpty) {
+      totalReview = restaurantReview.length;
+      for (int i = 0; i < totalReview; i++) {
+        avgRating += restaurantReview[i].rating;
+      }
+      avgRating = avgRating / totalReview;
+    }
+
+    return avgRating;
+}
 
   int restaurantTotalReview(Map<String, List<Review>> groupedReviews, String idRestaurant)  {
     int totalReview = 0;
