@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:jogjarasa_mobile/models/forum_comment_entry.dart';
 import 'package:jogjarasa_mobile/models/forum_topic_entry.dart';
 import 'package:jogjarasa_mobile/screens/bookmark/bookmark.dart';
 import 'package:jogjarasa_mobile/screens/forum/add_comment.dart';
 import 'package:jogjarasa_mobile/screens/forum/add_topic.dart';
+import 'package:jogjarasa_mobile/screens/forum/edit_comment.dart';
+import 'package:jogjarasa_mobile/screens/forum/edit_topic.dart';
 import 'package:jogjarasa_mobile/screens/forum/forum_home.dart';
 import 'package:jogjarasa_mobile/screens/forum/topic_detail.dart';
 import 'package:jogjarasa_mobile/screens/login.dart';
@@ -58,18 +61,25 @@ class MyApp extends StatelessWidget {
           '/reservasi': (context) => const ReservationPage(),
           // Tambahkan routes untuk forum
           '/forum': (context) => const ForumHomePage(),
-          '/add-topic': (context) => const AddTopicPage(),
+          '/add-topic-flutter': (context) => const AddTopicPage(),
           '/topic-detail': (context) {
             final topic = ModalRoute.of(context)!.settings.arguments as Topic;
             return TopicDetailPage(topic: topic);
           },
-          '/add-comment': (context) {
+          '/add-comment-flutter': (context) {
             final topic = ModalRoute.of(context)!.settings.arguments as Topic;
             return AddCommentPage(topic: topic);
           },
           // '/forum': (context) => const F
           // '/rating': (context) => const RatingPage(),
+          '/edit-topic-flutter': (context) {
+            final topic = ModalRoute.of(context)!.settings.arguments as Topic;
+            return EditTopicPage(topic: topic);
+          },
           '/bookmark': (context) => const BookmarkPage(),
+          '/edit-comment-flutter': (context) => EditCommentPage(
+            comment: ModalRoute.of(context)!.settings.arguments as Comment,
+          ),
           },
         debugShowCheckedModeBanner: false,
       ),

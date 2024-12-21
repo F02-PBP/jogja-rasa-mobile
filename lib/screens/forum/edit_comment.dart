@@ -2,22 +2,28 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jogjarasa_mobile/models/forum_topic_entry.dart';
+import 'package:jogjarasa_mobile/models/forum_comment_entry.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
-class AddCommentPage extends StatefulWidget {
-  final Topic topic;
+class EditCommentPage extends StatefulWidget {
+  final Comment comment;
 
-  const AddCommentPage({super.key, required this.topic});
+  const EditCommentPage({super.key, required this.comment});
 
   @override
-  State<AddCommentPage> createState() => _AddCommentPageState();
+  State<EditCommentPage> createState() => _EditCommentPageState();
 }
 
-class _AddCommentPageState extends State<AddCommentPage> {
+class _EditCommentPageState extends State<EditCommentPage> {
   final _formKey = GlobalKey<FormState>();
-  String _comment = "";
+  late String _comment;
+
+  @override
+  void initState() {
+    super.initState();
+    _comment = widget.comment.fields.comment;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +33,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
       appBar: AppBar(
         backgroundColor: Colors.orange[800],
         title: Text(
-          'Tambah Komentar',
+          'Edit Komentar',
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontWeight: FontWeight.bold
@@ -42,7 +48,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Tambah komentar:',
+                'Edit komentar:',
                 style: GoogleFonts.poppins(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
@@ -51,6 +57,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
               ),
               const SizedBox(height: 12.0),
               TextFormField(
+                initialValue: _comment,
                 decoration: InputDecoration(
                   hintText: 'Tulis komentarmu di sini...',
                   border: OutlineInputBorder(
@@ -79,21 +86,22 @@ class _AddCommentPageState extends State<AddCommentPage> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     final response = await request.postJson(
-                      "http://localhost:8000/forum/topic/add-comment-flutter/",
+                      "http://localhost:8000/forum/comment/${widget.comment.pk}/edit-flutter/",
                       jsonEncode({
-                        'topic_id': widget.topic.pk,
                         'comment': _comment,
                       }),
                     );
 
                     if (response['status'] == 'success') {
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("Komentar berhasil ditambahkan!"),
+                          content: Text("Komentar berhasil diubah!"),
                         ),
                       );
                       Navigator.pop(context);
                     } else {
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Terjadi kesalahan, silakan coba lagi."),
@@ -103,7 +111,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
                   }
                 },
                 child: Text(
-                  "Submit",
+                  "Simpan",
                   style: GoogleFonts.poppins(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

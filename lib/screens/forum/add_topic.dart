@@ -92,11 +92,12 @@ class _AddTopicPageState extends State<AddTopicPage> {
                           content: Text("Silakan login terlebih dahulu!"),
                         ),
                       );
+                      Navigator.pushReplacementNamed(context, '/login');
                       return;
                     }
 
                     final response = await request.postJson(
-                      "http://127.0.0.1:8000/forum/topic/add/",
+                      "http://localhost:8000/forum/topic/add-flutter/",
                       jsonEncode({
                         'title': _title,
                         'description': _description,
