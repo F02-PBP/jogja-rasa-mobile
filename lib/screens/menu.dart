@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jogjarasa_mobile/models/bookmark_entry.dart';
 import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
+import 'package:jogjarasa_mobile/models/review_entry.dart';
 import 'package:jogjarasa_mobile/screens/reservation/reservation_form.dart';
 import 'package:jogjarasa_mobile/services/restaurant_service.dart';
+import 'package:jogjarasa_mobile/services/review_services.dart';
 import 'package:jogjarasa_mobile/widgets/left_drawer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:jogjarasa_mobile/screens/rating_more.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -394,23 +397,34 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           TextOverflow.ellipsis,
                                                     ),
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      Icon(Icons.star,
-                                                          color:
-                                                              Colors.amber[600],
-                                                          size: 20),
-                                                      const SizedBox(width: 4),
-                                                      Text(
-                                                        restaurant.rating
-                                                            .toStringAsFixed(1),
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ],
+                                                  FutureBuilder(
+                                                    future: ReviewServices().averageRating(restaurant.id), 
+                                                    builder: (context, snapshot) {
+                                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                                        return const CircularProgressIndicator();
+                                                      } else if (snapshot.hasError) {
+                                                        return Text(
+                                                          'Error: ${snapshot.error}',
+                                                          style: TextStyle(color: Colors.red),
+                                                        );
+                                                      } else if (snapshot.hasData) {
+                                                        return Row(
+                                                          children: [
+                                                            Icon(Icons.star, color: Colors.amber[600], size: 20),
+                                                            const SizedBox(width: 4),
+                                                            Text(
+                                                              snapshot.data!.toStringAsFixed(1),
+                                                              style: const TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      } else {
+                                                        return const Text('No reviews');
+                                                      }
+                                                    }
                                                   ),
                                                 ],
                                               ),
@@ -484,7 +498,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     ),
                                                   ),
                                                   TextButton.icon(
-                                                    onPressed: () {},
+                                                    onPressed: () async{
+                                                      Navigator.push(context, MaterialPageRoute(
+                                                        builder: (context) => RestaurantReviewPage(restaurant: restaurant)
+                                                      ),
+                                                    );
+                                                  },
                                                     icon: const Icon(
                                                         Icons.star_border),
                                                     label: const Text('Nilai'),
@@ -665,18 +684,34 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        Icon(Icons.star, color: Colors.amber[600], size: 20),
-                        const SizedBox(width: 4),
-                        Text(
-                          restaurant.rating.toStringAsFixed(1),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    FutureBuilder(
+                      future: ReviewServices().averageRating(restaurant.id), 
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text(
+                            'Error: ${snapshot.error}',
+                            style: TextStyle(color: Colors.red),
+                          );
+                        } else if (snapshot.hasData) {
+                          return Row(
+                            children: [
+                              Icon(Icons.star, color: Colors.amber[600], size: 20),
+                              const SizedBox(width: 4),
+                              Text(
+                                snapshot.data!.toStringAsFixed(1),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return const Text('No reviews');
+                        }
+                      }
                     ),
                   ],
                 ),
@@ -732,7 +767,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () async{
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => RestaurantReviewPage(restaurant: restaurant)
+                          ),
+                        );
+                      },
                       icon: const Icon(Icons.star_border),
                       label: const Text('Nilai'),
                       style: TextButton.styleFrom(

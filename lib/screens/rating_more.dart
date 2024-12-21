@@ -8,22 +8,22 @@ import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
 
 class RestaurantReviewPage extends StatefulWidget {
   final Restaurant restaurant;
-  List<Review>? reviews; // Remove final to allow updates
 
-  RestaurantReviewPage({
+  const RestaurantReviewPage({
     super.key,
     required this.restaurant,
-    this.reviews,
   });
+
 
   @override
   State<RestaurantReviewPage> createState() => _RestaurantReviewPageState();
 }
 
 class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
+  List<Review>? reviews;
+
   final _formKey = GlobalKey<FormState>();
   final _reviewController = TextEditingController();
-
   final reviewServant = review_services.ReviewServices();
   int _rating = 5;
 
@@ -32,10 +32,21 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
   DateTime? _endDate;
   String _searchUsername = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchReviews(); // Start fetching reviews when the widget is initialized
+  }
+
+  Future<void> _fetchReviews() async {
+    reviews = await reviewServant.getRestaurantReviews(id : widget.restaurant.id);
+    setState(() {}); 
+  }
+
   List<Review> _getFilteredReviews() {
     
     
-    return (widget.reviews ?? []).where((review) {
+    return (reviews ?? []).where((review) {
       if (!_selectedRatings.contains(review.rating)) {
         return false;
       }
@@ -140,9 +151,8 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
-    final reviews = widget.reviews ?? [];
-    final ratingDistribution = _calculateRatingDistribution(reviews);
-    final totalReviews = reviews.length;
+    final ratingDistribution = _calculateRatingDistribution(reviews ?? []);
+    final totalReviews = reviews?.length ?? 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -237,21 +247,21 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                final response = await request.postJson("http://localhost:8000/review/create_review_flutter/", 
-                                jsonEncode({
-                                  "review" : _reviewController.text,
-                                  "rating" : _rating,
-                                  "pk_resto" : widget.restaurant.id
-                                }));
+                                final response = await request.postJson(
+                                  "http://localhost:8000/review/create_review_flutter/", 
+                                  jsonEncode({
+                                    "review": _reviewController.text,
+                                    "rating": _rating,
+                                    "pk_resto": widget.restaurant.id
+                                  })
+                                );
+                                
                                 if (context.mounted) {
                                   if (response['status'] == true) {
-                                    final updatedReviews = await reviewServant.getRestaurantReviews(request: request, id: widget.restaurant.id);
-
-                                    setState(() {
-                                      widget.reviews = updatedReviews;
-                                      _reviewController.clear(); // Clear the input field
-                                    });
-
+                                    // Use the _fetchReviews() method instead of direct assignment
+                                    await _fetchReviews();
+                                    _reviewController.clear(); // Clear the input field
+                                    
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         content: Text('Berhasil menambahkan review'),
@@ -268,9 +278,7 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                                       ),
                                     );
                                   }
-
                                 }
-                                
                               }
                             },
                             child: const Padding(
