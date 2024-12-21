@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
             return AddCommentPage(topic: topic);
           },
           // '/forum': (context) => const F
-          // '/rating': (context) => const RatingPage(),
+          '/rating': (context) => const RatingPage(),
           '/edit-topic-flutter': (context) {
             final topic = ModalRoute.of(context)!.settings.arguments as Topic;
             return EditTopicPage(topic: topic);
