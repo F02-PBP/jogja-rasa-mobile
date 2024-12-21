@@ -38,9 +38,12 @@ class Restaurant {
           getLocationFromCoordinates(
               json['longitude'].toDouble(), json['latitude'].toDouble()),
       isBookmarked: json['is_bookmarked'] ?? false,
-      rating: json['rating']?.toDouble() ?? 0.0,
+      rating: (json['rating'] != null) ? json['rating'].toDouble() : 0.0,
+
     );
   }
+
+  get imageUrl => null;
 
   static String getLocationFromCoordinates(double longitude, double latitude) {
     if (longitude >= 110.70) {

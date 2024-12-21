@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jogjarasa_mobile/models/forum_topic_entry.dart';
+import 'package:jogjarasa_mobile/screens/bookmark/bookmark.dart';
 import 'package:jogjarasa_mobile/screens/forum/add_comment.dart';
 import 'package:jogjarasa_mobile/screens/forum/add_topic.dart';
 import 'package:jogjarasa_mobile/screens/forum/forum_home.dart';
@@ -68,8 +69,8 @@ class MyApp extends StatelessWidget {
           },
           // '/forum': (context) => const F
           // '/rating': (context) => const RatingPage(),
-          
-        },
+          '/bookmark': (context) => const BookmarkPage(),
+          },
         debugShowCheckedModeBanner: false,
       ),
     );
