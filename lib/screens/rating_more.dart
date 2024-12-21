@@ -425,13 +425,27 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                               review.username,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      review.username,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      review.date.toString().split(' ')[0], // Format the date
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const Spacer(),
                               Row(
                                 children: List.generate(
                                   5,
