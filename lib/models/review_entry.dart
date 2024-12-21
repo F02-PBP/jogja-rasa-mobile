@@ -1,11 +1,13 @@
 import 'dart:convert';
 class Review {
-  final String idreview;
+  final int idreview;
   final String idrestaurant;
-  final String iduser;
+  final int iduser;
+  final String username;
   final DateTime date;
   final int rating;
   final String review;
+
   // method return List<Review> from json
   List<Review> reviewFromJson(String str) 
     => List<Review>.from(json.decode(str).map((x)
@@ -22,6 +24,7 @@ class Review {
     required this.date,
     required this.rating,
     required this.review,
+    required this.username,
   });
 
   factory Review.fromJson(Map<String, dynamic> json) {
@@ -29,9 +32,10 @@ class Review {
       idreview: json['pk'],
       idrestaurant: json['fields']['restaurant'],
       iduser: json['fields']['user'],
-      date: DateTime.parse(json["date"]),
+      date: DateTime.parse(json['fields']['date']),
       rating: json['fields']['rating'],
-      review: json['fields']['review']
+      review: json['fields']['review'],
+      username: json['fields']['username']
     );
   }
 

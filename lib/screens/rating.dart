@@ -6,6 +6,7 @@ import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
 import 'package:jogjarasa_mobile/services/review_services.dart' as review_service;
 import 'package:jogjarasa_mobile/services/restaurant_service.dart' as restaurant_service;
 import 'package:jogjarasa_mobile/screens/rating_more.dart';
+import 'package:jogjarasa_mobile/widgets/left_drawer.dart';
 class RatingPage extends StatefulWidget {
   const RatingPage({super.key});
 
@@ -34,6 +35,7 @@ class _RatingPageState extends State<RatingPage> {
     restaurant_service.RestaurantService restaurantServant = restaurant_service.RestaurantService();
 
     return Scaffold(
+      drawer: LeftDrawer(),
       appBar: AppBar(title: const Text('Restaurant Ratings')),
       body: FutureBuilder(
         future: Future.wait([

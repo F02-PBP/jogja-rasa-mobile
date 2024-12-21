@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -115,7 +114,7 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Rating Distribution',
+                        'Distribusi Rating',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -249,6 +248,7 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                 itemCount: reviews.length,
                 itemBuilder: (context, index) {
                   final review = reviews[index];
+                  // final String? _username = review.username;
                   return Card(
                     margin: const EdgeInsets.only(bottom: 8),
                     child: Padding(
@@ -258,9 +258,9 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                         children: [
                           Row(
                             children: [
-                              const Text(
-                                "username",
-                                style: TextStyle(
+                              Text(
+                               review.username,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

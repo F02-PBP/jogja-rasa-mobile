@@ -9,7 +9,7 @@ class ReviewServices {
   Future<List<Review>> getReviews({required CookieRequest request}) async {
     try {
         final response =
-          await http.get(Uri.parse('$baseUrl/review/show_reviews_json/'));
+          await http.get(Uri.parse('$baseUrl/review/show_reviews_json_flutter/'));
 
       if (response.statusCode == 200) {
         final List<dynamic> reviewJson = json.decode(response.body);
