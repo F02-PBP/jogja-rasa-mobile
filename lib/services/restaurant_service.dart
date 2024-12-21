@@ -116,30 +116,33 @@ class RestaurantService {
   }
 
   Future<List<Bookmark>> getBookmarks(CookieRequest request) async {
-    final url = "$baseUrl/bookmark/get_bookmarks_flutter/";
-    final response = await request.get(url);
+    try {
+      final url = "$baseUrl/bookmark/get_bookmarks_flutter/";
+      final response = await request.get(url);
 
-    print("Response: $response");
+      print("Response: $response");
 
-    if (response == null || response.isEmpty) {
-      throw Exception('No data received');
-    }
-    Map<String, dynamic> data = response;
-    print("Parsed data: $data");
+      if (response == null) {
+        return [];
+      }
 
-    if (data['success']) {
-      final List<dynamic> bookmarksData = data['bookmarks'];
+      Map<String, dynamic> data = response;
+      print("Parsed data: $data");
 
-      return bookmarksData.map((json) {
-        try {
-          return Bookmark.fromJson(json ?? {});
-        } catch (e) {
-          print("Error while parsing bookmark: $e");
-          rethrow;
-        }
-      }).toList();
-    } else {
-      throw Exception('Failed to fetch bookmarks');
+      if (data['success'] == false &&
+          data['message'] == 'No bookmarks found.') {
+        return [];
+      }
+
+      if (data['success'] && data['bookmarks'] != null) {
+        final List<dynamic> bookmarksData = data['bookmarks'];
+        return bookmarksData.map((json) => Bookmark.fromJson(json)).toList();
+      }
+
+      return [];
+    } catch (e) {
+      print("Error in getBookmarks: $e");
+      throw Exception('Failed to fetch bookmarks: $e');
     }
   }
 }
