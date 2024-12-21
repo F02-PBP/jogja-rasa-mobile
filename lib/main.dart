@@ -15,7 +15,7 @@ import 'package:jogjarasa_mobile/screens/reservation/reservation_list.dart';
 import 'package:jogjarasa_mobile/screens/welcome.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-
+import 'package:jogjarasa_mobile/screens/rating.dart';
 void main() {
   runApp(const MyApp());
 }
