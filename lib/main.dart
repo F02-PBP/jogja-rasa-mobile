@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:jogjarasa_mobile/screens/reservation/reservation_list.dart';
-import 'package:provider/provider.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:jogjarasa_mobile/screens/welcome.dart';
+import 'package:jogjarasa_mobile/models/forum_topic_entry.dart';
+import 'package:jogjarasa_mobile/screens/forum/add_comment.dart';
+import 'package:jogjarasa_mobile/screens/forum/add_topic.dart';
+import 'package:jogjarasa_mobile/screens/forum/forum_home.dart';
+import 'package:jogjarasa_mobile/screens/forum/topic_detail.dart';
 import 'package:jogjarasa_mobile/screens/login.dart';
-import 'package:jogjarasa_mobile/screens/register.dart';
 import 'package:jogjarasa_mobile/screens/menu.dart';
-// import 'package:jogjarasa_mobile/screens/forum.dart';
-// import 'package:jogjarasa_mobile/screens/rating.dart';
+import 'package:jogjarasa_mobile/screens/register.dart';
+import 'package:jogjarasa_mobile/screens/reservation/reservation_list.dart';
+import 'package:jogjarasa_mobile/screens/welcome.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -52,7 +55,18 @@ class MyApp extends StatelessWidget {
           '/register': (context) => const RegisterPage(),
           '/home': (context) => const MyHomePage(),
           '/reservasi': (context) => const ReservationPage(),
-          // '/forum': (context) => const ForumPage(),
+          // Tambahkan routes untuk forum
+          '/forum': (context) => const ForumHomePage(),
+          '/add-topic': (context) => const AddTopicPage(),
+          '/topic-detail': (context) {
+            final topic = ModalRoute.of(context)!.settings.arguments as Topic;
+            return TopicDetailPage(topic: topic);
+          },
+          '/add-comment': (context) {
+            final topic = ModalRoute.of(context)!.settings.arguments as Topic;
+            return AddCommentPage(topic: topic);
+          },
+          // '/forum': (context) => const F
           // '/rating': (context) => const RatingPage(),
           
         },
