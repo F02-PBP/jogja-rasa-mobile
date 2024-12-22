@@ -16,6 +16,7 @@ import 'package:jogjarasa_mobile/screens/welcome.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:jogjarasa_mobile/screens/rating.dart';
+import 'package:jogjarasa_mobile/screens/profile/profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/welcome',
         routes: {
           '/welcome': (context) => const WelcomePage(),
+          '/profile': (context) => const ProfileScreen(),
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/home': (context) => const MyHomePage(),
@@ -79,9 +81,9 @@ class MyApp extends StatelessWidget {
           },
           '/bookmark': (context) => const BookmarkPage(),
           '/edit-comment-flutter': (context) => EditCommentPage(
-            comment: ModalRoute.of(context)!.settings.arguments as Comment,
-          ),
-          },
+                comment: ModalRoute.of(context)!.settings.arguments as Comment,
+              ),
+        },
         debugShowCheckedModeBanner: false,
       ),
     );
