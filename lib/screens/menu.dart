@@ -345,26 +345,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                           color: Colors.grey[300],
                                           borderRadius:
                                               const BorderRadius.vertical(
-                                                  top: Radius.circular(16)),
+                                            top: Radius.circular(16),
+                                          ),
                                         ),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              const BorderRadius.vertical(
-                                                  top: Radius.circular(16)),
-                                          child: Image.network(
-                                            'https://via.placeholder.com/400x150',
-                                            width: double.infinity,
-                                            fit: BoxFit.cover,
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return Center(
-                                                child: Icon(
-                                                  Icons.restaurant,
-                                                  size: 64,
-                                                  color: Colors.grey[400],
-                                                ),
-                                              );
-                                            },
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.restaurant,
+                                            size: 64,
+                                            color: Colors.orange[800],
                                           ),
                                         ),
                                       ),
@@ -665,28 +653,18 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 200,
+            height: 150,
             decoration: BoxDecoration(
               color: Colors.grey[300],
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
             ),
-            child: ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
-              child: Image.network(
-                'https://via.placeholder.com/400x200',
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Center(
-                    child: Icon(
-                      Icons.restaurant,
-                      size: 64,
-                      color: Colors.grey[400],
-                    ),
-                  );
-                },
+            child: Center(
+              child: Icon(
+                Icons.restaurant,
+                size: 64,
+                color: Colors.orange[800],
               ),
             ),
           ),
