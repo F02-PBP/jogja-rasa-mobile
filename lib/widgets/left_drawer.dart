@@ -140,34 +140,55 @@ class LeftDrawer extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () async {
-                            Navigator.of(context).pop();
+                            try {
+                              final response = await request.logout(
+                                  "https://jogja-rasa-production.up.railway.app/auth/logout/");
 
-                            final response = await request.logout(
-                                "https://jogja-rasa-production.up.railway.app/auth/logout/");
+                              if (response['status'] == true) {
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
 
-                            if (response['status'] == true) {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                    '/login',
+                                    (route) => false,
+                                  );
+
+                                  ScaffoldMessenger.of(context)
+                                    ..hideCurrentSnackBar()
+                                    ..showSnackBar(
+                                      SnackBar(
+                                        content: Text(response['message'] ??
+                                            "Berhasil logout"),
+                                        backgroundColor: Colors.green,
+                                        behavior: SnackBarBehavior.floating,
+                                      ),
+                                    );
+                                }
+                              } else {
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+
+                                  ScaffoldMessenger.of(context)
+                                    ..hideCurrentSnackBar()
+                                    ..showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            "Gagal logout. Silakan coba lagi."),
+                                        backgroundColor: Colors.red,
+                                        behavior: SnackBarBehavior.floating,
+                                      ),
+                                    );
+                                }
+                              }
+                            } catch (e) {
                               if (context.mounted) {
-                                String message = response['message'];
-                                Navigator.pushReplacementNamed(
-                                    context, '/login');
+                                Navigator.of(context).pop();
+
                                 ScaffoldMessenger.of(context)
                                   ..hideCurrentSnackBar()
                                   ..showSnackBar(
                                     SnackBar(
-                                      content: Text(message),
-                                      backgroundColor: Colors.green,
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
-                                  );
-                              }
-                            } else {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          "Gagal logout. Silakan coba lagi."),
+                                      content: Text("Error: $e"),
                                       backgroundColor: Colors.red,
                                       behavior: SnackBarBehavior.floating,
                                     ),
