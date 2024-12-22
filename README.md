@@ -44,7 +44,7 @@ JogjaRasa tidak hanya berfungsi sebagai panduan kuliner, tetapi juga menjadi pen
 
 ## 📲 Download Sekarang!  
 Klik tautan di bawah untuk mulai menikmati keindahan Jogja di mana saja:  
-[**Download Aplikasi Jogja Rasa**](https://install.appcenter.ms/orgs/jogja-rasa/apps/jogja-rasa/distribution_groups/public/releases/9) 
+[**Download Aplikasi Jogja Rasa**](https://install.appcenter.ms/orgs/jogja-rasa/apps/jogja-rasa/distribution_groups/public/releases/11) 
 
 - 🔑 Jangan lupa untuk **login** atau **registrasi** jika belum memiliki akun.
 - 🎯 Mulailah mencari tempat makan terbaik di Yogyakarta!
