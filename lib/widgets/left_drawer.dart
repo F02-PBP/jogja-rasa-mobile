@@ -159,7 +159,7 @@ class LeftDrawer extends StatelessWidget {
                                   Navigator.of(context).pop();
 
                                   Navigator.of(context).pushNamedAndRemoveUntil(
-                                    '/login',
+                                    '/',
                                     (route) => false,
                                   );
 
