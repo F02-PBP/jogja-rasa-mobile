@@ -17,7 +17,6 @@ class TopicDetailPage extends StatefulWidget {
 }
 
 class _TopicDetailPageState extends State<TopicDetailPage> {
-
   bool isAuthor = false;
   String username = '';
   Map<int, String> usernames = {};
@@ -31,21 +30,23 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   }
 
   Future<void> checkIsAuthor(CookieRequest request) async {
-    final response = await request.get('http://localhost:8000/forum/get-user-name-by-id/${widget.topic.fields.author}/');
+    final response = await request.get(
+        'https://jogja-rasa-production.up.railway.app/forum/get-user-name-by-id/${widget.topic.fields.author}/');
     setState(() {
       isAuthor = widget.topic.fields.author.toString() == response['username'];
     });
   }
+
   Future<List<Comment>> fetchComments(CookieRequest request) async {
     final response = await request.get(
-      'http://localhost:8000/forum/json/topic/${widget.topic.pk}/comments/'
-    );
+        'https://jogja-rasa-production.up.railway.app/forum/json/topic/${widget.topic.pk}/comments/');
     var data = response;
     List<Comment> listComments = [];
     for (var d in data) {
       if (d != null) {
         Comment commentFetched = Comment.fromJson(d);
-        String usernameComment = await fetchUserNameById(request, commentFetched.fields.author);
+        String usernameComment =
+            await fetchUserNameById(request, commentFetched.fields.author);
         usernames[commentFetched.fields.author] = usernameComment;
         listComments.add(commentFetched);
       }
@@ -54,7 +55,8 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   }
 
   Future<void> fetchUserName(CookieRequest request) async {
-    final response = await request.get('http://localhost:8000/forum/get-user-name/');
+    final response = await request.get(
+        'https://jogja-rasa-production.up.railway.app/forum/get-user-name/');
     var data = response;
     setState(() {
       username = data['username'];
@@ -62,7 +64,8 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   }
 
   Future<String> fetchUserNameById(CookieRequest request, int user_id) async {
-    final response = await request.get('http://localhost:8000/forum/get-user-name-by-id/$user_id/');
+    final response = await request.get(
+        'https://jogja-rasa-production.up.railway.app/forum/get-user-name-by-id/$user_id/');
     var data = response;
     return data['username'];
   }
@@ -70,7 +73,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   Future<void> _deleteTopic(CookieRequest request) async {
     try {
       final response = await request.get(
-        'http://localhost:8000/forum/topic/${widget.topic.pk}/delete-flutter/',
+        'https://jogja-rasa-production.up.railway.app/forum/topic/${widget.topic.pk}/delete-flutter/',
       );
       if (response['status'] == 'success') {
         if (!context.mounted) return;
@@ -87,23 +90,25 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
     }
   }
 
-  Future<bool> isCommentAuthor(CookieRequest request, int commentAuthorId) async {
-    final response = await request.get('http://localhost:8000/forum/get-user-name-by-id/$commentAuthorId/');
+  Future<bool> isCommentAuthor(
+      CookieRequest request, int commentAuthorId) async {
+    final response = await request.get(
+        'https://jogja-rasa-production.up.railway.app/forum/get-user-name-by-id/$commentAuthorId/');
     return username == response['username'];
   }
 
   Future<void> _deleteComment(CookieRequest request, Comment comment) async {
     try {
       final response = await request.get(
-        'http://localhost:8000/forum/comment/${comment.pk}/delete-flutter/',
+        'https://jogja-rasa-production.up.railway.app/forum/comment/${comment.pk}/delete-flutter/',
       );
-      
+
       // Handle response yang mungkin string JSON
       var responseData = response;
       if (response is String) {
         responseData = json.decode(response);
       }
-      
+
       if (responseData['status'] == 'success') {
         setState(() {}); // Refresh comments list
         if (!context.mounted) return;
@@ -113,7 +118,9 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
       } else {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: ${responseData['message'] ?? 'Unknown error'}")),
+          SnackBar(
+              content:
+                  Text("Error: ${responseData['message'] ?? 'Unknown error'}")),
         );
       }
     } catch (e) {
@@ -134,50 +141,55 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
         title: Text(
           widget.topic.fields.title,
           style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontWeight: FontWeight.bold
-          ),
+              color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        actions: isAuthor ? [
-          PopupMenuButton<String>(
-            onSelected: (value) async {
-              if (value == 'edit') {
-                Navigator.pushNamed(context, '/edit-topic-flutter', arguments: widget.topic);
-              } else if (value == 'delete') {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Delete Topic'),
-                    content: const Text('Are you sure you want to delete this topic?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _deleteTopic(request);
-                        },
-                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
-           ),
-                    ],
-                  ),
-                );
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'edit',
-                child: Text('Edit Topic'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'delete',
-                child: Text('Delete Topic', style: TextStyle(color: Colors.red)),
-              ),
-            ],
-          ),
-        ] : null,      
+        actions: isAuthor
+            ? [
+                PopupMenuButton<String>(
+                  onSelected: (value) async {
+                    if (value == 'edit') {
+                      Navigator.pushNamed(context, '/edit-topic-flutter',
+                          arguments: widget.topic);
+                    } else if (value == 'delete') {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Delete Topic'),
+                          content: const Text(
+                              'Are you sure you want to delete this topic?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                _deleteTopic(request);
+                              },
+                              child: const Text('Delete',
+                                  style: TextStyle(color: Colors.red)),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'edit',
+                      child: Text('Edit Topic'),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'delete',
+                      child: Text('Delete Topic',
+                          style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              ]
+            : null,
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange[800],
@@ -213,9 +225,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 Text(
                   'Komentar',
                   style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold
-                  ),
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -255,11 +265,13 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                   children: [
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             comment.fields.comment,
-                                            style: GoogleFonts.poppins(fontSize: 14),
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 14),
                                           ),
                                           const SizedBox(height: 8),
                                           Text(
@@ -273,9 +285,11 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                       ),
                                     ),
                                     FutureBuilder<bool>(
-                                      future: isCommentAuthor(request, comment.fields.author),
+                                      future: isCommentAuthor(
+                                          request, comment.fields.author),
                                       builder: (context, snapshot) {
-                                        if (snapshot.hasData && snapshot.data == true) {
+                                        if (snapshot.hasData &&
+                                            snapshot.data == true) {
                                           return PopupMenuButton<String>(
                                             onSelected: (value) async {
                                               if (value == 'edit') {
@@ -284,39 +298,56 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                                   '/edit-comment-flutter',
                                                   arguments: comment,
                                                 ).then((_) {
-                                                  setState(() {}); // Refresh comments after returning from edit page
+                                                  setState(
+                                                      () {}); // Refresh comments after returning from edit page
                                                 });
                                               } else if (value == 'delete') {
                                                 showDialog(
                                                   context: context,
-                                                  builder: (context) => AlertDialog(
-                                                    title: const Text('Delete Comment'),
-                                                    content: const Text('Are you sure you want to delete this comment?'),
+                                                  builder: (context) =>
+                                                      AlertDialog(
+                                                    title: const Text(
+                                                        'Delete Comment'),
+                                                    content: const Text(
+                                                        'Are you sure you want to delete this comment?'),
                                                     actions: [
                                                       TextButton(
-                                                        onPressed: () => Navigator.pop(context),
-                                                        child: const Text('Cancel'),
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                        child: const Text(
+                                                            'Cancel'),
                                                       ),
                                                       TextButton(
                                                         onPressed: () {
-                                                          Navigator.pop(context);
-                                                          _deleteComment(request, comment);
+                                                          Navigator.pop(
+                                                              context);
+                                                          _deleteComment(
+                                                              request, comment);
                                                         },
-                                                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                                        child: const Text(
+                                                            'Delete',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .red)),
                                                       ),
                                                     ],
                                                   ),
                                                 );
                                               }
                                             },
-                                            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                            itemBuilder:
+                                                (BuildContext context) =>
+                                                    <PopupMenuEntry<String>>[
                                               const PopupMenuItem<String>(
                                                 value: 'edit',
                                                 child: Text('Edit Comment'),
                                               ),
                                               const PopupMenuItem<String>(
                                                 value: 'delete',
-                                                child: Text('Delete Comment', style: TextStyle(color: Colors.red)),
+                                                child: Text('Delete Comment',
+                                                    style: TextStyle(
+                                                        color: Colors.red)),
                                               ),
                                             ],
                                           );
@@ -341,4 +372,4 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
       ),
     );
   }
-} 
+}

@@ -29,9 +29,7 @@ class _AddCommentPageState extends State<AddCommentPage> {
         title: Text(
           'Tambah Komentar',
           style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontWeight: FontWeight.bold
-          ),
+              color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Form(
@@ -74,12 +72,13 @@ class _AddCommentPageState extends State<AddCommentPage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange[800],
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     final response = await request.postJson(
-                      "http://localhost:8000/forum/topic/add-comment-flutter/",
+                      "https://jogja-rasa-production.up.railway.app/forum/topic/add-comment-flutter/",
                       jsonEncode({
                         'topic_id': widget.topic.pk,
                         'comment': _comment,
@@ -96,7 +95,8 @@ class _AddCommentPageState extends State<AddCommentPage> {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("Terjadi kesalahan, silakan coba lagi."),
+                          content:
+                              Text("Terjadi kesalahan, silakan coba lagi."),
                         ),
                       );
                     }

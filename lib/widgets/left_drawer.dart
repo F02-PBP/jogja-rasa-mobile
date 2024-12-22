@@ -83,12 +83,12 @@ class LeftDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
-                  context, '/bookmark',
+                  context,
+                  '/bookmark',
                   (route) => route.isFirst,
                 );
               },
             ),
-            
             ListTile(
               leading: const Icon(Icons.calendar_today),
               title: Text(
@@ -98,7 +98,8 @@ class LeftDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => const ReservationPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const ReservationPage()),
                   (route) => false,
                 );
               },
@@ -141,8 +142,8 @@ class LeftDrawer extends StatelessWidget {
                           onPressed: () async {
                             Navigator.of(context).pop();
 
-                            final response = await request
-                                .logout("http://localhost:8000/auth/logout/");
+                            final response = await request.logout(
+                                "https://jogja-rasa-production.up.railway.app/auth/logout/");
 
                             if (response['status'] == true) {
                               if (context.mounted) {

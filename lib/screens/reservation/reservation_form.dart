@@ -37,7 +37,7 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
     }
     return timeSlots;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
@@ -64,8 +64,9 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                'Select Date',
-                style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
+                  'Select Date',
+                  style: GoogleFonts.poppins(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 // Date input
@@ -97,7 +98,8 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
                       }
                     },
                     controller: TextEditingController(
-                      text: DateFormat('dd/MM/yyyy').format(_date), // Display selected date
+                      text: DateFormat('dd/MM/yyyy')
+                          .format(_date), // Display selected date
                     ),
                   ),
                 ),
@@ -105,7 +107,8 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
                 const SizedBox(height: 20),
                 Text(
                   "Select Time",
-                  style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.poppins(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 SingleChildScrollView(
@@ -128,7 +131,8 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
                           _date.day == now.day;
 
                       // Determine if the time is valid (only check if the date is today)
-                      final isValidTime = !isToday || !generatedTime.isBefore(now);
+                      final isValidTime =
+                          !isToday || !generatedTime.isBefore(now);
 
                       return GestureDetector(
                         onTap: isValidTime
@@ -140,11 +144,14 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
                             : null, // Disable onTap for invalid times
                         child: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 4),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
                             color: _time == time
                                 ? Colors.orange[800]
-                                : (isValidTime ? Colors.white : Colors.grey[300]),
+                                : (isValidTime
+                                    ? Colors.white
+                                    : Colors.grey[300]),
                             borderRadius: BorderRadius.circular(24),
                           ),
                           child: Text(
@@ -153,8 +160,11 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: isValidTime
-                                  ? (_time == time ? Colors.white : Colors.grey[500])
-                                  : Colors.grey[400], // Greyed out for invalid times
+                                  ? (_time == time
+                                      ? Colors.white
+                                      : Colors.grey[500])
+                                  : Colors.grey[
+                                      400], // Greyed out for invalid times
                             ),
                           ),
                         ),
@@ -165,8 +175,9 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
                 const SizedBox(height: 20),
 
                 Text(
-                "Number of People",
-                style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
+                  "Number of People",
+                  style: GoogleFonts.poppins(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 SingleChildScrollView(
@@ -182,7 +193,8 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
                         },
                         child: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 2),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
                           decoration: BoxDecoration(
                             color: _numberOfPeople == number
                                 ? Colors.orange[100]
@@ -190,9 +202,9 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: _numberOfPeople == number
-                              ? (Colors.orange[800] ?? Colors.orange)
-                              : Colors.transparent,  // Border color
-                              width: 2,  // Optional: set the width of the border
+                                  ? (Colors.orange[800] ?? Colors.orange)
+                                  : Colors.transparent, // Border color
+                              width: 2, // Optional: set the width of the border
                             ),
                           ),
                           child: Text(
@@ -213,86 +225,88 @@ class _ReservationFormPageState extends State<ReservationFormPage> {
                 const SizedBox(height: 20),
 
                 // Save button
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 3,
-                          backgroundColor: Colors.orange[800],
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 40,
-                            vertical: 12,
-                          ),
-                          minimumSize: const Size(double.infinity, 50),
+                Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 3,
+                        backgroundColor: Colors.orange[800],
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 12,
                         ),
-                        onPressed: () async {
-                          if (_time.isEmpty || _numberOfPeople == 0) {
-                            // Show a warning if any field is not filled
+                        minimumSize: const Size(double.infinity, 50),
+                      ),
+                      onPressed: () async {
+                        if (_time.isEmpty || _numberOfPeople == 0) {
+                          // Show a warning if any field is not filled
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                "Please fill in all the fields.",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              backgroundColor: Colors.red,
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                          return; // Stop execution if validation fails
+                        }
+                        if (_formKey.currentState!.validate()) {
+                          // Format the date and time
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(_date);
+                          String formattedTime = _time;
+
+                          // Prepare data for the API request
+                          final response = await request.postJson(
+                            'https://jogja-rasa-production.up.railway.app/reservasi/create-reservation/',
+                            jsonEncode(<String, dynamic>{
+                              'date': formattedDate.toString(),
+                              'time': formattedTime,
+                              'number_of_people': _numberOfPeople,
+                              'restaurant': widget.restaurantModel.toJson(),
+                            }),
+                          );
+
+                          if (response['status'] == 'success') {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
-                                  "Please fill in all the fields.",
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                                    "Reservation successfully created!",
+                                    style: TextStyle(color: Colors.white)),
+                                backgroundColor: Colors.green,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MyHomePage()),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Failed to create reservation.",
+                                    style: TextStyle(color: Colors.white)),
                                 backgroundColor: Colors.red,
                                 behavior: SnackBarBehavior.floating,
                               ),
                             );
-                            return; // Stop execution if validation fails
                           }
-                          if (_formKey.currentState!.validate()) {
-                            // Format the date and time
-                            String formattedDate = DateFormat('yyyy-MM-dd').format(_date);
-                            String formattedTime = _time;
-
-                            // Prepare data for the API request
-                            final response = await request.postJson(
-                              'http://localhost:8000/reservasi/create-reservation/',
-                              jsonEncode(<String, dynamic>{
-                                'date': formattedDate.toString(),
-                                'time': formattedTime,
-                                'number_of_people': _numberOfPeople,
-                                'restaurant': widget.restaurantModel.toJson(),
-                              }),
-                            );
-
-                            if (response['status'] == 'success') {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Reservation successfully created!",
-                                    style: TextStyle(color: Colors.white)),
-                                  backgroundColor: Colors.green,
-                                  behavior: SnackBarBehavior.floating,),
-                              );
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => const MyHomePage()),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Failed to create reservation.",
-                                    style: TextStyle(color: Colors.white)),
-                                  backgroundColor: Colors.red,
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        child: Text(
-                          "Save Reservation",
-                          style: GoogleFonts.poppins(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
+                        }
+                      },
+                      child: Text(
+                        "Save Reservation",
+                        style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ]
-                ),
+                  ),
+                ]),
               ],
             ),
           ),

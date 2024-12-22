@@ -239,7 +239,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             final response = await request.postJson(
-                                "http://localhost:8000/auth/register/",
+                                "https://jogja-rasa-production.up.railway.app/auth/register/",
                                 jsonEncode({
                                   "username": _usernameController.text,
                                   "password": _passwordController.text,

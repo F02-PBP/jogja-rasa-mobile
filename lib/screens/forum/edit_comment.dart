@@ -35,9 +35,7 @@ class _EditCommentPageState extends State<EditCommentPage> {
         title: Text(
           'Edit Komentar',
           style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontWeight: FontWeight.bold
-          ),
+              color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Form(
@@ -81,12 +79,13 @@ class _EditCommentPageState extends State<EditCommentPage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange[800],
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     final response = await request.postJson(
-                      "http://localhost:8000/forum/comment/${widget.comment.pk}/edit-flutter/",
+                      "https://jogja-rasa-production.up.railway.app/forum/comment/${widget.comment.pk}/edit-flutter/",
                       jsonEncode({
                         'comment': _comment,
                       }),
@@ -104,7 +103,8 @@ class _EditCommentPageState extends State<EditCommentPage> {
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("Terjadi kesalahan, silakan coba lagi."),
+                          content:
+                              Text("Terjadi kesalahan, silakan coba lagi."),
                         ),
                       );
                     }

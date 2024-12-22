@@ -24,7 +24,8 @@ class _EditTopicPageState extends State<EditTopicPage> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.topic.fields.title);
-    _descriptionController = TextEditingController(text: widget.topic.fields.description);
+    _descriptionController =
+        TextEditingController(text: widget.topic.fields.description);
   }
 
   @override
@@ -37,9 +38,7 @@ class _EditTopicPageState extends State<EditTopicPage> {
         title: Text(
           'Edit Topic',
           style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontWeight: FontWeight.bold
-          ),
+              color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Form(
@@ -84,12 +83,13 @@ class _EditTopicPageState extends State<EditTopicPage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange[800],
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     final response = await request.postJson(
-                      "http://localhost:8000/forum/topic/${widget.topic.pk}/edit-flutter/",
+                      "https://jogja-rasa-production.up.railway.app/forum/topic/${widget.topic.pk}/edit-flutter/",
                       jsonEncode({
                         'title': _titleController.text,
                         'description': _descriptionController.text,

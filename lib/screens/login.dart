@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                           if (_formKey.currentState!.validate()) {
                             try {
                               final response = await request.postJson(
-                                "http://localhost:8000/auth/login/",
+                                "https://jogja-rasa-production.up.railway.app/auth/flutter-login/",
                                 jsonEncode({
                                   'username': _usernameController.text,
                                   'password': _passwordController.text,

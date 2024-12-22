@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:jogjarasa_mobile/services/review_services.dart' as review_services;
+import 'package:jogjarasa_mobile/services/review_services.dart'
+    as review_services;
 import 'package:jogjarasa_mobile/models/review_entry.dart';
 import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
 
@@ -13,7 +14,6 @@ class RestaurantReviewPage extends StatefulWidget {
     super.key,
     required this.restaurant,
   });
-
 
   @override
   State<RestaurantReviewPage> createState() => _RestaurantReviewPageState();
@@ -39,27 +39,28 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
   }
 
   Future<void> _fetchReviews() async {
-    reviews = await reviewServant.getRestaurantReviews(id : widget.restaurant.id);
-    setState(() {}); 
+    reviews =
+        await reviewServant.getRestaurantReviews(id: widget.restaurant.id);
+    setState(() {});
   }
 
   List<Review> _getFilteredReviews() {
-    
-    
     return (reviews ?? []).where((review) {
       if (!_selectedRatings.contains(review.rating)) {
         return false;
       }
-      
+
       if (_startDate != null && review.date.isBefore(_startDate!)) {
         return false;
       }
       if (_endDate != null && review.date.isAfter(_endDate!)) {
         return false;
       }
-      
-      if (_searchUsername.isNotEmpty && 
-          !review.username.toLowerCase().contains(_searchUsername.toLowerCase())) {
+
+      if (_searchUsername.isNotEmpty &&
+          !review.username
+              .toLowerCase()
+              .contains(_searchUsername.toLowerCase())) {
         return false;
       }
       return true;
@@ -94,7 +95,7 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
 
   Widget _buildRatingBar(int starCount, int count, int totalReviews) {
     double percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -181,7 +182,8 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                       ),
                       const SizedBox(height: 16),
                       for (int i = 5; i >= 1; i--)
-                        _buildRatingBar(i, ratingDistribution[i]!, totalReviews),
+                        _buildRatingBar(
+                            i, ratingDistribution[i]!, totalReviews),
                     ],
                   ),
                 ),
@@ -215,7 +217,8 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                               IconButton(
                                 icon: Icon(
                                   Icons.star,
-                                  color: i <= _rating ? Colors.amber : Colors.grey,
+                                  color:
+                                      i <= _rating ? Colors.amber : Colors.grey,
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -248,27 +251,27 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 final response = await request.postJson(
-                                  "http://localhost:8000/review/create_review_flutter/", 
-                                  jsonEncode({
-                                    "review": _reviewController.text,
-                                    "rating": _rating,
-                                    "pk_resto": widget.restaurant.id
-                                  })
-                                );
-                                
+                                    "https://jogja-rasa-production.up.railway.app/review/create_review_flutter/",
+                                    jsonEncode({
+                                      "review": _reviewController.text,
+                                      "rating": _rating,
+                                      "pk_resto": widget.restaurant.id
+                                    }));
+
                                 if (context.mounted) {
                                   if (response['status'] == true) {
                                     // Use the _fetchReviews() method instead of direct assignment
                                     await _fetchReviews();
-                                    _reviewController.clear(); // Clear the input field
-                                    
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Berhasil menambahkan review'),
-                                        backgroundColor: Colors.green,
-                                        behavior: SnackBarBehavior.floating,
-                                      )
-                                    );
+                                    _reviewController
+                                        .clear(); // Clear the input field
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content:
+                                          Text('Berhasil menambahkan review'),
+                                      backgroundColor: Colors.green,
+                                      behavior: SnackBarBehavior.floating,
+                                    ));
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
@@ -311,7 +314,7 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Rating filter
                       const Text('Filter by Rating:'),
                       Wrap(
@@ -326,9 +329,9 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                                 Icon(
                                   Icons.star,
                                   size: 16,
-                                  color: _selectedRatings.contains(rating) 
-                                    ? Colors.amber 
-                                    : Colors.grey,
+                                  color: _selectedRatings.contains(rating)
+                                      ? Colors.amber
+                                      : Colors.grey,
                                 ),
                               ],
                             ),
@@ -346,7 +349,7 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                         }).toList(),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Date filter
                       const Text('Filter by Date Range:'),
                       Row(
@@ -354,24 +357,24 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                           Expanded(
                             child: TextButton.icon(
                               icon: const Icon(Icons.calendar_today),
-                              label: Text(_startDate == null 
-                                ? 'Start Date' 
-                                : 'From: ${_startDate!.toString().split(' ')[0]}'),
+                              label: Text(_startDate == null
+                                  ? 'Start Date'
+                                  : 'From: ${_startDate!.toString().split(' ')[0]}'),
                               onPressed: () => _selectDate(true),
                             ),
                           ),
                           Expanded(
                             child: TextButton.icon(
                               icon: const Icon(Icons.calendar_today),
-                              label: Text(_endDate == null 
-                                ? 'End Date' 
-                                : 'To: ${_endDate!.toString().split(' ')[0]}'),
+                              label: Text(_endDate == null
+                                  ? 'End Date'
+                                  : 'To: ${_endDate!.toString().split(' ')[0]}'),
                               onPressed: () => _selectDate(false),
                             ),
                           ),
                         ],
                       ),
-                      
+
                       // Username filter
                       const SizedBox(height: 16),
                       TextField(
@@ -386,7 +389,7 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                           });
                         },
                       ),
-                      
+
                       // Clear filters button
                       const SizedBox(height: 16),
                       SizedBox(
@@ -445,7 +448,9 @@ class _RestaurantReviewPageState extends State<RestaurantReviewPage> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      review.date.toString().split(' ')[0], // Format the date
+                                      review.date
+                                          .toString()
+                                          .split(' ')[0], // Format the date
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],

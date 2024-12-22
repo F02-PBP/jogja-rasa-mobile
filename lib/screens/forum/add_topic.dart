@@ -27,9 +27,7 @@ class _AddTopicPageState extends State<AddTopicPage> {
         title: Text(
           'Buat Topik Baru',
           style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontWeight: FontWeight.bold
-          ),
+              color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Form(
@@ -82,7 +80,8 @@ class _AddTopicPageState extends State<AddTopicPage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange[800],
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
@@ -97,7 +96,7 @@ class _AddTopicPageState extends State<AddTopicPage> {
                     }
 
                     final response = await request.postJson(
-                      "http://localhost:8000/forum/topic/add-flutter/",
+                      "https://jogja-rasa-production.up.railway.app/forum/topic/add-flutter/",
                       jsonEncode({
                         'title': _title,
                         'description': _description,
@@ -114,7 +113,8 @@ class _AddTopicPageState extends State<AddTopicPage> {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("Terjadi kesalahan, silakan coba lagi."),
+                          content:
+                              Text("Terjadi kesalahan, silakan coba lagi."),
                         ),
                       );
                     }
@@ -134,4 +134,4 @@ class _AddTopicPageState extends State<AddTopicPage> {
       ),
     );
   }
-} 
+}

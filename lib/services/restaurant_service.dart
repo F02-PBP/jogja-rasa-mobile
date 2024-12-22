@@ -5,7 +5,7 @@ import 'package:jogjarasa_mobile/models/restaurant_entry.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 
 class RestaurantService {
-  static const String baseUrl = 'http://localhost:8000';
+  static const String baseUrl = 'https://jogja-rasa-production.up.railway.app';
   static const int itemsPerPage = 10;
 
   Future<List<Restaurant>> getRestaurants(CookieRequest request) async {
