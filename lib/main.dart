@@ -17,6 +17,9 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:jogjarasa_mobile/screens/rating.dart';
 import 'package:jogjarasa_mobile/screens/profile/profile_screen.dart';
+import 'package:jogjarasa_mobile/screens/explore.dart';
+import 'package:jogjarasa_mobile/screens/home_unauth.dart';
+import 'package:jogjarasa_mobile/screens/forum_unauth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -54,16 +57,19 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        initialRoute: '/welcome',
+        initialRoute: '/',
         routes: {
+          '/': (context) => const ExplorePage(),
+          '/explore': (context) => const ExplorePage(),
           '/welcome': (context) => const WelcomePage(),
           '/profile': (context) => const ProfileScreen(),
           '/login': (context) => const LoginPage(),
           '/register': (context) => const RegisterPage(),
           '/home': (context) => const MyHomePage(),
           '/reservasi': (context) => const ReservationPage(),
-          // Tambahkan routes untuk forum
+          '/restaurants': (context) => const HomePageUnauth(),
           '/forum': (context) => const ForumHomePage(),
+          '/forum_lagi': (context) => const ForumPageUnauth(),
           '/add-topic-flutter': (context) => const AddTopicPage(),
           '/topic-detail': (context) {
             final topic = ModalRoute.of(context)!.settings.arguments as Topic;
