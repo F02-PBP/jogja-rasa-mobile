@@ -104,6 +104,16 @@ class LeftDrawer extends StatelessWidget {
                 );
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: Text(
+                'Profile',
+                style: GoogleFonts.poppins(),
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+            ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.logout, color: Colors.red),
