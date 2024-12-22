@@ -42,9 +42,9 @@ JogjaRasa mengintegrasikan kemudahan teknologi dengan eksplorasi cita rasa lokal
 
 JogjaRasa tidak hanya berfungsi sebagai panduan kuliner, tetapi juga menjadi penghubung antara wisatawan dan masyarakat lokal melalui kekayaan cita rasa yang ditawarkan kota ini.
 
-## 🎉 Bergabunglah Bersama Kami!
-
-Aplikasi JogjaRasa sekarang bisa dicoba secara langsung di [JogjaRasa](https://jogja-rasa-production.up.railway.app).
+## 📲 Download Sekarang!  
+Klik tautan di bawah untuk mulai menikmati keindahan Jogja di mana saja:  
+[**Download Aplikasi Jogja Rasa**](https://install.appcenter.ms/orgs/jogja-rasa/apps/jogja-rasa/distribution_groups/public/releases/5) 
 
 - 🔑 Jangan lupa untuk **login** atau **registrasi** jika belum memiliki akun.
 - 🎯 Mulailah mencari tempat makan terbaik di Yogyakarta!
